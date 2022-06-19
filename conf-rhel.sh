@@ -148,12 +148,24 @@ then
     cd /usr/share/backgrounds/
 
 	printf "[%s] Downloading wallpaper from ParrotSec... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
-    sudo git clone https://github.com/ParrotSec/parrot-wallpapers.git
-    cd parrot-wallpaper/
-    sudo rm -rf debian/
-    sudo rm -f Makefile
-    sudo rm -f parrot-wallpapers.xml
-    sudo mv background/* .
+    sudo git clone https://github.com/ParrotSec/parrot-wallpapers.git temp
+    sudo mkdir parrot_wallpapers/
+    sudo mv temp/backgrounds/* parrot-wallpapers/
+    sudo rm -rf temp
+    cd /usr/share/backgrounds/
+
+    printf "[%s] Downloading wallpaper from PopOS!... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+    sudo git clone https://github.com/pop-os/wallpapers.git temp
+    sudo mkdir pop-os_wallpapers/
+    sudo mv temp/original/* pop-os_wallpapers/
+    sudo rm -rf temp
+    cd /usr/share/backgrounds/
+
+    printf "[%s] Downloading wallpaper from ElementaryOS... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+    sudo git clone https://github.com/elementary/wallpapers.git temp
+    sudo mkdir elementary-wallpapers/
+    sudo mv temp/backgrounds/* elementary-wallpapers/
+    sudo rm -rf temp
     cd /usr/share/backgrounds/
 
     printf "[%s] Downloading wallpaper from Kali... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
