@@ -2,11 +2,11 @@
 
 declare -i K8=0
 declare -i BASE_PROGRAMMING=1
-declare -i FLUTTER=1
-declare -i SYSTEM=1
+declare -i FLUTTER=0
+declare -i SYSTEM=0
 declare -i NETWORK=1
 declare -i CHROME=1
-declare -i DOCKER=0
+declare -i DOCKER=1
 declare -i WALLPAPER=1
 declare -i POPSHELL=1
 
