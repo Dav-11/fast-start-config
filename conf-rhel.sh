@@ -12,7 +12,7 @@ declare -i POPSHELL=1
 
 # update
 printf "[%s] Updating apt and upgrade packets... \n" "$(date +'%D%_H:%M')"
-sudo apt update && sudo apt upgrade -y
+sudo dnf -y update
 
 # uninstall built in apps
 printf "[%s]\n ###############################\n\n Removing Bloatware... \n\n ###############################\n" "$(date +'%D%_H:%M')"
@@ -86,7 +86,7 @@ then
 	printf "[%s] Installing Chrome... \n" "$(date +'%D%_H:%M')"
 	sudo dnf install fedora-workstation-repositories
 	sudo dnf config-manager --set-enabled google-chrome
-    sudo dnf install google-chrome-stable
+    sudo dnf -y install google-chrome-stable
 fi
 
 if [ "$DOCKER" -gt "0" ]
