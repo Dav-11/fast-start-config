@@ -120,6 +120,15 @@ then
 	sudo snap install kontena-lens --classic
 fi
 
+if [ "$POPSHELL" -gt "0" ]
+then
+
+    sudo dnf -y install gnome-tweak-tool
+    sudo dnf -y install gnome-shell-extension-pop-shell xprop
+    gsettings set org.gnome.desktop.wm.preferences button-layout 'close,maximize,minimize:appmenu'
+
+fi
+
 if [ "$WALLPAPER" -gt "0" ]
 then
 	printf "[%s]\n ###############################\n\n Downloading additional wallpaper... \n\n ###############################\n" "$(date +'%D%_H:%M')"
@@ -143,15 +152,5 @@ then
     cd /usr/share/backgrounds/
 
 fi
-
-if [ "$POPSHELL" -gt "0" ]
-then
-
-    sudo dnf -y install gnome-tweak-tool
-    sudo dnf -y install gnome-shell-extension-pop-shell xprop
-    gsettings set org.gnome.desktop.wm.preferences button-layout 'close,maximize,minimize:appmenu'
-
-fi
-
 
 printf "[%s] Done, Have a nice day! \n" "$(date +'%D%_H:%M')"
