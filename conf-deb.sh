@@ -7,6 +7,7 @@ declare -i NETWORK=1
 declare -i EDGE=0
 declare -i CHROME=1
 declare -i AD=0
+declare -i WALLPAPER=1
 
 # update
 printf "[%s] Updating apt and upgrade packets... \n" "$(date +'%D%_H:%M')"
@@ -152,6 +153,11 @@ then
 	yes | sudo apt install sssd-ad sssd-tools realmd adcli
 	
 	
+fi
+
+if [ "$WALLPAPER" -gt "0" ]
+then
+    curl -s https://raw.githubusercontent.com/Dav-11/linux-conf/main/wallpaper-downloader.sh | bash -f '/usr/share/backgrounds/'
 fi
 
 printf "[%s] Done, Have a nice day! \n" "$(date +'%D%_H:%M')"

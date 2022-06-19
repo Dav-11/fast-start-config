@@ -143,7 +143,7 @@ fi
 
 if [ "$WALLPAPER" -gt "0" ]
 then
-    curl -s https://raw.githubusercontent.com/Dav-11/linux-conf/main/wallpaper-downloader.sh | bash
+    curl -s https://raw.githubusercontent.com/Dav-11/linux-conf/main/wallpaper-downloader.sh | bash -f '/usr/share/backgrounds/'
 fi
 
 printf "[%s] Done, Have a nice day! \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
