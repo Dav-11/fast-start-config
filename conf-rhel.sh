@@ -44,6 +44,9 @@ sudo dnf -y install snapd >> $LOG_FILE
 printf "[%s] Installing Git... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
 sudo dnf -y install git >> $LOG_FILE
 
+printf "[%s] Flatpak setup... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
 if [ "$NETWORK" -gt "0" ]
 then
 	printf "[%s]\n ###############################\n\n Installing NEWTORK Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
@@ -142,22 +145,21 @@ if [ "$WALLPAPER" -gt "0" ]
 then
 	printf "[%s]\n ###############################\n\n Downloading additional wallpaper... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
 	
-    sudo su
     cd /usr/share/backgrounds/
 
 	printf "[%s] Downloading wallpaper from ParrotSec... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
-    git clone https://github.com/ParrotSec/parrot-wallpapers.git
+    sudo git clone https://github.com/ParrotSec/parrot-wallpapers.git
     cd parrot-wallpaper/
-    rm -rf debian/
-    rm -f Makefile
-    rm -f parrot-wallpapers.xml
-    mv background/* .
+    sudo rm -rf debian/
+    sudo rm -f Makefile
+    sudo rm -f parrot-wallpapers.xml
+    sudo mv background/* .
     cd /usr/share/backgrounds/
 
     printf "[%s] Downloading wallpaper from Kali... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
-    mkdir kali
+    sudo mkdir kali
     cd kali/
-    wget https://gitlab.com/kalilinux/packages/kali-wallpapers/-/raw/kali/master/2022/backgrounds/kali/kali-actiniaria-16x9.png?inline=false
+    sudo wget https://gitlab.com/kalilinux/packages/kali-wallpapers/-/raw/kali/master/2022/backgrounds/kali/kali-actiniaria-16x9.png?inline=false
     cd /usr/share/backgrounds/
 
 fi
