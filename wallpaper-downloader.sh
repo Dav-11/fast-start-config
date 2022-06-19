@@ -40,9 +40,11 @@ sudo git clone https://gitlab.com/kalilinux/packages/kali-wallpapers.git temp
 sudo mkdir kali_wallpapers/
 for i in $(find 'temp/' -name '*.png' );
 do
-    if [[ -L "$i" ]]; then
+    if [[ -L "$i" ]]
+    then
+        echo ''
     else
-        sudo mv "$i" kali_wallpapers/;
+        sudo mv "$i" kali_wallpapers/
     fi
 done;
 sudo rm -rf temp
