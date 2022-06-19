@@ -41,7 +41,7 @@ sudo mkdir kali_wallpapers/
 for i in $(find 'temp/' -name '*.png' );
 do
     if [[ -L "$i" ]]; then
-        echo ''
+        printf ''
     else
         sudo mv "$i" kali_wallpapers/
     fi
