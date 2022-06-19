@@ -39,7 +39,7 @@ printf "[%s] Downloading wallpaper from Kali... \n" "$(date +'%D%_H:%M')" | tee 
 sudo git clone https://gitlab.com/kalilinux/packages/kali-wallpapers.git temp
 sudo mkdir kali_wallpapers/
 for i in $(find 'temp/' -name '*.png' );
-    do mv "$i" kali_wallpapers/;
+    do sudo mv "$i" kali_wallpapers/;
 done;
 sudo rm -rf temp
 cd $BACKGROUNDS_FOLDER
