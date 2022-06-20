@@ -1,6 +1,6 @@
 #!/bin/bash
 
-printf "[%s]\n ###############################\n\n Downloading additional wallpaper... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+printf "\n ###############################\n\n [%s] Downloading additional wallpaper... \n\n ###############################\n" "$(date +'%D_%H:%M')" | tee -a $LOG_FILE
 
 BACKGROUNDS_FOLDER=$(pwd)/backgrounds/
 
@@ -36,15 +36,50 @@ sudo rm -rf temp
 cd $BACKGROUNDS_FOLDER
 
 printf "[%s] Downloading wallpaper from Kali... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+
+# vars for kali
+declare -i SIXTEEN_NINE=1
+declare -i SIXTEEN_TEN=1
+declare -i FOUR_THREE=0
+
 sudo git clone https://gitlab.com/kalilinux/packages/kali-wallpapers.git temp
 sudo mkdir kali_wallpapers/
-for i in $(find 'temp/' -name '*.png' );
-do
-    if [[ -L "$i" ]]; then
-        printf ''
-    else
-        sudo mv "$i" kali_wallpapers/
-    fi
-done;
+
+if [ "$SIXTEEN_NINE" -gt "0" ]
+then
+    for i in $(find 'temp/' -name '*16x9.png' );
+    do
+        if [[ -L "$i" ]]; then
+            printf ''
+        else
+            sudo mv "$i" kali_wallpapers/
+        fi
+    done;
+fi
+
+if [ "$SIXTEEN_TEN" -gt "0" ]
+then
+    for i in $(find 'temp/' -name '*16x10.png' );
+    do
+        if [[ -L "$i" ]]; then
+            printf ''
+        else
+            sudo mv "$i" kali_wallpapers/
+        fi
+    done;
+fi
+
+if [ "$FOUR_THREE" -gt "0" ]
+then
+    for i in $(find 'temp/' -name '*4x3.png' );
+    do
+        if [[ -L "$i" ]]; then
+            printf ''
+        else
+            sudo mv "$i" kali_wallpapers/
+        fi
+    done;
+fi
+
 sudo rm -rf temp
 cd $BACKGROUNDS_FOLDER
