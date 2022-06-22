@@ -1,17 +1,20 @@
 #!/bin/bash
 
 declare -i K8=0
-declare -i PROGRAMMING=1
-declare -i SYSTEM=1
+declare -i BASE_PROGRAMMING=1
+declare -i FLUTTER=0
+declare -i SYSTEM=0
 declare -i NETWORK=1
-declare -i EDGE=0
 declare -i CHROME=1
+declare -i DOCKER=1
 declare -i AD=0
 declare -i WALLPAPER=1
 
+LOG_FILE=$(pwd)/installer.log
+
 # update
 printf "[%s] Updating apt and upgrade packets... \n" "$(date +'%D%_H:%M')"
-sudo apt update && yes |sudo apt upgrade
+sudo apt update && sudo apt -y upgrade
 
 # disable suspension
 #printf "[%s]\n ###############################\n\n disabling suspension... \n\n ###############################\n" "$(date +'%D%_H:%M')"
@@ -51,11 +54,23 @@ yes | sudo apt autoremove
 
 # install applications
 printf "[%s]\n ###############################\n\n Installing General Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
-printf "[%s] Installing VSCode... \n" "$(date +'%D%_H:%M')"
-sudo snap install --classic code #vs code
 
 printf "[%s] Installing VLC... \n" "$(date +'%D%_H:%M')"
 sudo snap install vlc #vlc
+
+printf "[%s] Installing Curl... \n" "$(date +'%D%_H:%M')"
+sudo apt -y install curl
+
+printf "[%s] Installing Neofetch... \n" "$(date +'%D%_H:%M')"
+sudo apt -y install neofetch
+
+printf "[%s] Installing Git... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+sudo apt -y install git
+
+printf "[%s] Installing FatPak... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+sudo apt -y install flatpak
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
 
 printf "[%s] Installing OBS... \n" "$(date +'%D%_H:%M')"
 sudo snap install obs-studio
@@ -68,25 +83,45 @@ sudo rm -f zoom_amd64.deb
 printf "[%s] Installing Telegram... \n" "$(date +'%D%_H:%M')"
 sudo snap install telegram-desktop
 
-printf "[%s] Installing Curl... \n" "$(date +'%D%_H:%M')"
-sudo apt -y install curl
-
-printf "[%s] Installing Neofetch... \n" "$(date +'%D%_H:%M')"
-sudo apt -y install neofetch
-
-# printf "[%s] Installing Play on Linux... \n" "$(date +'%D%_H:%M')"
-# yes | sudo apt install playonlinux
-
-if [ "$EDGE" -gt "0" ]
+if [ "$NETWORK" -gt "0" ]
 then
-	printf "[%s]\n ###############################\n\n Installing EDGE Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
+	printf "[%s]\n ###############################\n\n Installing NEWTORK Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
 	
-	printf "[%s] Installing Edge... \n" "$(date +'%D%_H:%M')"
-	curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-	yes |sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
-	sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge-dev.list'
-	yes |sudo rm microsoft.gpg
-	sudo apt update && yes |sudo apt install microsoft-edge-dev
+	printf "[%s] Installing Easyssh... \n" "$(date +'%D%_H:%M')"
+	flatpak install flathub com.github.muriloventuroso.easyssh
+
+fi
+
+if [ "$BASE_PROGRAMMING" -gt "0" ]
+then
+	printf "[%s]\n ###############################\n\n Installing BASE_PROGRAMMING Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+
+	printf "[%s] Installing JDK... \n" "$(date +'%D%_H:%M')"
+	sudo apt -y install default-jdk
+
+	printf "[%s] Installing GO... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+	sudo apt -y install golang-go
+
+	printf "[%s] Installing Rust... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+	sudo curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+
+	printf "[%s] Installing VSCode... \n" "$(date +'%D%_H:%M')"
+	wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+	sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
+	sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
+	rm -f packages.microsoft.gpg
+
+	sudo apt -y install apt-transport-https
+	sudo apt -y update
+	sudo apt -y install code
+fi
+
+if [ "$FLUTTER" -gt "0" ]
+then
+	printf "[%s]\n ###############################\n\n Installing Flutter... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+	
+	printf "[%s] Installing Flutter... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+	sudo snap install flutter --classic
 fi
 
 if [ "$CHROME" -gt "0" ]
@@ -95,27 +130,16 @@ then
 	
 	printf "[%s] Installing Chrome... \n" "$(date +'%D%_H:%M')"
 	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-	yes | sudo apt install ./google-chrome-stable_current_amd64.deb
+	sudo apt -y install ./google-chrome-stable_current_amd64.deb
 fi
 
-
-if [ "$PROGRAMMING" -gt "0" ]
+if [ "$DOCKER" -gt "0" ]
 then
-	printf "[%s]\n ###############################\n\n Installing PROGRAMMING Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
-	
-	printf "[%s] Installing Umbrello... \n" "$(date +'%D%_H:%M')"
-	sudo snap install umbrello #UML
-	
-	printf "[%s] Installing JDK... \n" "$(date +'%D%_H:%M')"
-	yes |sudo apt install default-jdk #jdk
-	
-	printf "[%s] Installing Android Studio... \n" "$(date +'%D%_H:%M')"
-	yes |sudo add-apt-repository ppa:maarten-fonville/android-studio
-	sudo apt update
-	yes |sudo apt install android-studio
+    printf "[%s]\n ###############################\n\n Installing DOCKER... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
 
-	printf "[%s] Installing Flutter... \n" "$(date +'%D%_H:%M')"
-	sudo snap install flutter --classic
+	curl -fsSL https://get.docker.com -o get-docker.sh
+ 	sudo sh get-docker.sh
+	rm -f get-docker.sh
 fi
 
 if [ "$SYSTEM" -gt "0" ]
@@ -124,17 +148,6 @@ then
 	
 	printf "[%s] Installing Powershell... \n" "$(date +'%D%_H:%M')"
 	sudo snap install powershell
-fi
-
-if [ "$NETWORK" -gt "0" ]
-then
-	printf "[%s]\n ###############################\n\n Installing NEWTORK Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
-	
-	printf "[%s] Installing Easyssh... \n" "$(date +'%D%_H:%M')"
-	flatpak install flathub com.github.muriloventuroso.easyssh
-	
-	printf "[%s] Installing Putty... \n" "$(date +'%D%_H:%M')"
-	yes |sudo apt-get install putty -y #Putty
 fi
 
 if [ "$K8" -gt "0" ]
