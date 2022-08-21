@@ -9,12 +9,12 @@ script for linux initial configuration
 
 ## Fedora
 ```bash
-curl -s https://raw.githubusercontent.com/Dav-11/linux-conf/main/conf-rhel.sh | bash
+curl -s https://raw.githubusercontent.com/Dav-11/fast-start-config/main/linux/conf-rhel.sh | bash
 ```
 
 ## Debian-based
 ```bash
-curl -s https://raw.githubusercontent.com/Dav-11/linux-conf/main/conf-deb.sh | bash
+curl -s https://raw.githubusercontent.com/Dav-11/fast-start-config/main/linux/conf-deb.sh | bash
 ```
 
 # TODO
