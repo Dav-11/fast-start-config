@@ -6,43 +6,6 @@ LOG_FILE=$(pwd)/installer.log
 printf "[%s] Installing Homebrew... \n" "$(date +'%D%_H:%M')"                                       | tee -a $LOG_FILE
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"     | tee -a $LOG_FILE
 
-# get shell config
-case "${SHELL}" in
-  */bash*)
-    if [[ -r "${HOME}/.bash_profile" ]]
-    then
-      shell_profile="${HOME}/.bash_profile"
-    else
-      shell_profile="${HOME}/.profile"
-    fi
-    ;;
-  */zsh*)
-    shell_profile="${HOME}/.zprofile"
-    ;;
-  *)
-    shell_profile="${HOME}/.profile"
-    ;;
-esac
-
-echo shell_profile: ${shell_profile}                                                                | tee -a $LOG_FILE
-
-UNAME_MACHINE="$(/usr/bin/uname -m)"
-
-if [[ "${UNAME_MACHINE}" == "arm64" ]]
-then
-    # On ARM macOS, this script installs to /opt/homebrew only
-    HOMEBREW_PREFIX="/opt/homebrew"
-else
-    # On Intel macOS, this script installs to /usr/local only
-    HOMEBREW_PREFIX="/usr/local"
-fi
-
-echo HOMEBREW_PREFIX: ${HOMEBREW_PREFIX}                                                            | tee -a $LOG_FILE
-
-# enable brew
-echo 'eval "\$(${HOMEBREW_PREFIX}/bin/brew shellenv)"' >> ${shell_profile}                          | tee -a $LOG_FILE
-eval "\$(${HOMEBREW_PREFIX}/bin/brew shellenv)"                                                     | tee -a $LOG_FILE
-
 
 # install vscode
 printf "[%s] Installing Visual Studio Code... \n" "$(date +'%D%_H:%M')"                             | tee -a $LOG_FILE
