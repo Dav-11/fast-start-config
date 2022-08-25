@@ -24,6 +24,8 @@ case "${SHELL}" in
     ;;
 esac
 
+echo shell_profile: ${shell_profile}                                                                | tee -a $LOG_FILE
+
 UNAME_MACHINE="$(/usr/bin/uname -m)"
 
 if [[ "${UNAME_MACHINE}" == "arm64" ]]
@@ -34,6 +36,8 @@ else
     # On Intel macOS, this script installs to /usr/local only
     HOMEBREW_PREFIX="/usr/local"
 fi
+
+echo HOMEBREW_PREFIX: ${HOMEBREW_PREFIX}                                                            | tee -a $LOG_FILE
 
 # enable brew
 echo 'eval "\$(${HOMEBREW_PREFIX}/bin/brew shellenv)"' >> ${shell_profile}                          | tee -a $LOG_FILE
