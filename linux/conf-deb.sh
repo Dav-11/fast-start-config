@@ -2,12 +2,9 @@
 
 declare -i K8=0
 declare -i BASE_PROGRAMMING=1
-declare -i FLUTTER=0
-declare -i SYSTEM=0
 declare -i NETWORK=1
 declare -i CHROME=1
 declare -i DOCKER=1
-declare -i AD=0
 declare -i WALLPAPER=1
 
 LOG_FILE=$(pwd)/installer.log
@@ -71,10 +68,6 @@ printf "[%s] Installing FatPak... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
 sudo apt -y install flatpak
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
-
-printf "[%s] Installing OBS... \n" "$(date +'%D%_H:%M')"
-sudo snap install obs-studio
-
 printf "[%s] Installing Zoom... \n" "$(date +'%D%_H:%M')"
 wget https://zoom.us/client/latest/zoom_amd64.deb
 sudo apt install ./zoom_amd64.deb
@@ -116,14 +109,6 @@ then
 	sudo apt -y install code
 fi
 
-if [ "$FLUTTER" -gt "0" ]
-then
-	printf "[%s]\n ###############################\n\n Installing Flutter... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
-	
-	printf "[%s] Installing Flutter... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
-	sudo snap install flutter --classic
-fi
-
 if [ "$CHROME" -gt "0" ]
 then
 	printf "[%s]\n ###############################\n\n Installing CHROME Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
@@ -142,30 +127,12 @@ then
 	rm -f get-docker.sh
 fi
 
-if [ "$SYSTEM" -gt "0" ]
-then
-	printf "[%s]\n ###############################\n\n Installing SYSTEM Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
-	
-	printf "[%s] Installing Powershell... \n" "$(date +'%D%_H:%M')"
-	sudo snap install powershell
-fi
-
 if [ "$K8" -gt "0" ]
 then
 	printf "[%s]\n ###############################\n\n Installing KUBERNETES Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
 	
 	printf "[%s] Installing Lens... \n" "$(date +'%D%_H:%M')"
 	sudo snap install kontena-lens --classic
-fi
-
-if [ "$AD" -gt "0" ]
-then
-	printf "[%s]\n ###############################\n\n Configuring AD... \n\n ###############################\n" "$(date +'%D%_H:%M')"
-	
-	printf "[%s] Installing SSSD \n" "$(date +'%D%_H:%M')"
-	yes | sudo apt install sssd-ad sssd-tools realmd adcli
-	
-	
 fi
 
 if [ "$WALLPAPER" -gt "0" ]

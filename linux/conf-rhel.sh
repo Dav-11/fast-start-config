@@ -2,8 +2,6 @@
 
 declare -i K8=0
 declare -i BASE_PROGRAMMING=1
-declare -i FLUTTER=0
-declare -i SYSTEM=0
 declare -i NETWORK=1
 declare -i CHROME=1
 declare -i DOCKER=1
@@ -19,7 +17,7 @@ sudo dnf -y update | tee -a $LOG_FILE
 # uninstall built in apps
 printf "[%s]\n ###############################\n\n Removing Bloatware... \n\n ###############################\n" "$(date +'%D%_H:%M')"
 
-
+# TODO
 
 # remove unused dependencies
 printf "[%s] Removing unused dependencies... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
@@ -62,7 +60,7 @@ then
 	printf "[%s] Installing JDK... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
 	sudo dnf -y install java-latest-openjdk >> $LOG_FILE
 
-    printf "[%s] Installing GO... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+    printf "[%s] Installing Go... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
 	sudo dnf -y install golang >> $LOG_FILE
 
     printf "[%s] Installing Rust... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
@@ -74,14 +72,6 @@ then
     sudo dnf check-update >> $LOG_FILE
     sudo dnf -y install code >> $LOG_FILE
 
-fi
-
-if [ "$FLUTTER" -gt "0" ]
-then
-	printf "[%s]\n ###############################\n\n Installing Flutter... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
-	
-	printf "[%s] Installing Flutter... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
-	sudo snap install flutter --classic
 fi
 
 if [ "$CHROME" -gt "0" ]
@@ -107,14 +97,6 @@ then
 
     sudo systemctl enable docker.service
     sudo systemctl enable containerd.service
-fi
-
-if [ "$SYSTEM" -gt "0" ]
-then
-	printf "[%s]\n ###############################\n\n Installing SYSTEM Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
-	
-	printf "[%s] Installing Powershell... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
-	sudo snap install powershell >> $LOG_FILE
 fi
 
 if [ "$K8" -gt "0" ]
