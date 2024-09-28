@@ -59,7 +59,6 @@ install zellij
 
 # p10k
 copy_file ./config/.p10k.zsh "$CONFIG_PATH"/p10k
-copy_file ./config/p10k_config "$CONFIG_PATH"/p10k
 
 # zsh
 copy_file ./config/zsh_power_config "$CONFIG_PATH"/zsh/
