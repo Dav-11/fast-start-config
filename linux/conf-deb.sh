@@ -1,13 +1,12 @@
 #!/bin/bash
 
 declare -i K8=0
-declare -i BASE_PROGRAMMING=1
-declare -i NETWORK=1
-declare -i CHROME=1
-declare -i DOCKER=1
-declare -i WALLPAPER=1
+declare -i NETWORK=0
+declare -i CHROME=0
+declare -i DOCKER=0
+declare -i WALLPAPER=0
 
-LOG_FILE=$(pwd)/installer.log
+cd /opt/
 
 # update
 printf "[%s] Updating apt and upgrade packets... \n" "$(date +'%D%_H:%M')"
@@ -16,7 +15,6 @@ sudo apt update && sudo apt -y upgrade
 # disable suspension
 #printf "[%s]\n ###############################\n\n disabling suspension... \n\n ###############################\n" "$(date +'%D%_H:%M')"
 #yes |sudo apt install gconf2
-
 
 # uninstall built in apps (gnome)
 printf "[%s]\n ###############################\n\n Removing Gnome Bloatware... \n\n ###############################\n" "$(date +'%D%_H:%M')"
@@ -63,10 +61,10 @@ sudo add-apt-repository ppa:zhangsongcui3371/fastfetch
 sudo apt update
 sudo apt -y install fastfetch
 
-printf "[%s] Installing Git... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+printf "[%s] Installing Git... \n" "$(date +'%D%_H:%M')"
 sudo apt -y install git
 
-printf "[%s] Installing FatPak... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+printf "[%s] Installing FatPak... \n" "$(date +'%D%_H:%M')"
 sudo apt -y install flatpak
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
@@ -100,24 +98,18 @@ sudo cp extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
 sudo desktop-file-install extra/linux/Alacritty.desktop
 sudo update-desktop-database
 
-# man
-sudo mkdir -p /usr/local/share/man/man1
-sudo mkdir -p /usr/local/share/man/man5
-scdoc < extra/man/alacritty.1.scd | gzip -c | sudo tee /usr/local/share/man/man1/alacritty.1.gz > /dev/null
-scdoc < extra/man/alacritty-msg.1.scd | gzip -c | sudo tee /usr/local/share/man/man1/alacritty-msg.1.gz > /dev/null
-scdoc < extra/man/alacritty.5.scd | gzip -c | sudo tee /usr/local/share/man/man5/alacritty.5.gz > /dev/null
-scdoc < extra/man/alacritty-bindings.5.scd | gzip -c | sudo tee /usr/local/share/man/man5/alacritty-bindings.5.gz > /dev/null
-
 # https://github.com/alacritty/alacritty/blob/master/INSTALL.md
+
+
 
 # copy config_file
 mkdir -p "$HOME"/.config/alacritty
 curl -fsSL https://raw.githubusercontent.com/Dav-11/fast-start-config/main/config_files/alacritty.toml -o "$HOME"/.config/alacritty/alacritty.toml
 
 
-printf "[%s]\n ###############################\n\n Installing BASE_PROGRAMMING Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+printf "[%s]\n ###############################\n\n Installing BASE_PROGRAMMING Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
 
-printf "[%s] Installing Go... \n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+printf "[%s] Installing Go... \n" "$(date +'%D%_H:%M')"
 sudo apt -y install golang-go
 
 printf "[%s] Installing VSCode... \n" "$(date +'%D%_H:%M')"
@@ -151,7 +143,7 @@ fi
 
 if [ "$DOCKER" -gt "0" ]
 then
-    printf "[%s]\n ###############################\n\n Installing DOCKER... \n\n ###############################\n" "$(date +'%D%_H:%M')" | tee -a $LOG_FILE
+    printf "[%s]\n ###############################\n\n Installing DOCKER... \n\n ###############################\n" "$(date +'%D%_H:%M')"
 
 	curl -fsSL https://get.docker.com -o get-docker.sh
  	sudo sh get-docker.sh
