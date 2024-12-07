@@ -1,0 +1,7 @@
+[window]
+opacity = 0.98
+blur = true
+
+[font]
+normal.family = "Hack Nerd Font Mono"
+size = 16

@@ -7,15 +7,15 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
-    "nightly": {
-      "enabled": true,
-      "channel": "stable"
-    },
-    "theme": "Andromeda",
-    "cursor_blink": true,
+  "theme": "Andromeda",
   
-    "autosave": "on_focus_change",
-    "autosave_on_focus_change": true,
-    "autosave_on_window_change": true,
-    "autosave_on_build": true
-  }
+  "ui_font_family": "Hack Nerd Font Mono",
+  "ui_font_size": 16,
+  
+  "cursor_blink": true,
+
+  "autosave": "on_focus_change",
+  "autosave_on_focus_change": true,
+  "autosave_on_window_change": true,
+  "autosave_on_build": true
+}
