@@ -1,86 +1,72 @@
 #!/bin/bash
 
-declare -i K8=0
-declare -i NETWORK=0
-declare -i CHROME=0
-declare -i DOCKER=0
-declare -i WALLPAPER=0
+CONFIG_PATH="~/.config"
+LOG_FILE=$(pwd)/installer.log
 
 cd /opt/
 
-# update
-printf "[%s] Updating apt and upgrade packets... \n" "$(date +'%D%_H:%M')"
-sudo apt update && sudo apt -y upgrade
+update_os() {
+    printf "[%s] Updating apt and upgrade packets... \n" "$(date +'%D%_H:%M')"
+    sudo apt update && sudo apt -y upgrade
+}
 
-# disable suspension
-#printf "[%s]\n ###############################\n\n disabling suspension... \n\n ###############################\n" "$(date +'%D%_H:%M')"
-#yes |sudo apt install gconf2
+remove_bloat_ubuntu() {
+    # uninstall built in apps (gnome)
+    printf "[%s]\n ###############################\n\n Removing Gnome Bloatware... \n\n ###############################\n" "$(date +'%D%_H:%M')"
 
-# uninstall built in apps (gnome)
-printf "[%s]\n ###############################\n\n Removing Gnome Bloatware... \n\n ###############################\n" "$(date +'%D%_H:%M')"
+    printf "[%s] Uninstalling installer... \n" "$(date +'%D%_H:%M')"
+    yes |sudo apt remove ubiquity
 
-printf "[%s] Uninstalling installer... \n" "$(date +'%D%_H:%M')"
-yes |sudo apt remove ubiquity
+    printf "[%s] Uninstalling Mahjong... \n" "$(date +'%D%_H:%M')"
+    yes |sudo apt --purge remove gnome-mahjongg
 
-printf "[%s] Uninstalling Mahjong... \n" "$(date +'%D%_H:%M')"
-yes |sudo apt --purge remove gnome-mahjongg
+    printf "[%s] Uninstalling Sudoku... \n" "$(date +'%D%_H:%M')"
+    yes |sudo apt --purge remove gnome-sudoku
 
-printf "[%s] Uninstalling Sudoku... \n" "$(date +'%D%_H:%M')"
-yes |sudo apt --purge remove gnome-sudoku
+    printf "[%s] Uninstalling Solitaire... \n" "$(date +'%D%_H:%M')"
+    yes |sudo apt --purge remove aisleriot
 
-printf "[%s] Uninstalling Solitaire... \n" "$(date +'%D%_H:%M')"
-yes |sudo apt --purge remove aisleriot
+    printf "[%s] Uninstalling Mines... \n" "$(date +'%D%_H:%M')"
+    yes |sudo apt --purge remove gnome-mines
 
-printf "[%s] Uninstalling Mines... \n" "$(date +'%D%_H:%M')"
-yes |sudo apt --purge remove gnome-mines
+    printf "[%s] Uninstalling Videos... \n" "$(date +'%D%_H:%M')"
+    yes |sudo apt --purge remove totem totem-plugins totem-common
 
-printf "[%s] Uninstalling Videos... \n" "$(date +'%D%_H:%M')"
-yes |sudo apt --purge remove totem totem-plugins totem-common
+    printf "[%s] Uninstalling Thunderbird... \n" "$(date +'%D%_H:%M')"
+    yes |sudo apt --purge remove thunderbird
 
-printf "[%s] Uninstalling Thunderbird... \n" "$(date +'%D%_H:%M')"
-yes |sudo apt --purge remove thunderbird
+    printf "[%s] Uninstalling rhythmbox... \n" "$(date +'%D%_H:%M')"
+    yes |sudo apt --purge remove rhythmbox
 
-printf "[%s] Uninstalling rhythmbox... \n" "$(date +'%D%_H:%M')"
-yes |sudo apt --purge remove rhythmbox
+    # remove unused dependencies
+    printf "[%s] Removing unused dependencies... \n" "$(date +'%D%_H:%M')"
+    yes | sudo apt autoremove
+}
 
-# remove unused dependencies
-printf "[%s] Removing unused dependencies... \n" "$(date +'%D%_H:%M')"
-yes | sudo apt autoremove
+install_basic_utils() {
 
-# install applications
-printf "[%s]\n ###############################\n\n Installing General Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
+    # install applications
+    printf "[%s]\n ###############################\n\n Installing General Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
 
-printf "[%s] Installing VLC... \n" "$(date +'%D%_H:%M')"
-sudo snap install vlc #vlc
+    printf "[%s] Installing Curl... \n" "$(date +'%D%_H:%M')"
+    sudo apt -y install curl apt-transport-https
 
-printf "[%s] Installing Curl... \n" "$(date +'%D%_H:%M')"
-sudo apt -y install curl
+    printf "[%s] Installing Git... \n" "$(date +'%D%_H:%M')"
+    sudo apt -y install git
 
-printf "[%s] Installing FastFetch... \n" "$(date +'%D%_H:%M')"
-sudo add-apt-repository ppa:zhangsongcui3371/fastfetch
-sudo apt update
-sudo apt -y install fastfetch
+    printf "[%s] Installing zsh... \n" "$(date +'%D%_H:%M')"
+    sudo apt -y install zsh
+}
 
-printf "[%s] Installing Git... \n" "$(date +'%D%_H:%M')"
-sudo apt -y install git
+build_alacritty() {
 
-printf "[%s] Installing FatPak... \n" "$(date +'%D%_H:%M')"
-sudo apt -y install flatpak
-sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    printf "[%s] Installing Rustup... \n" "$(date +'%D%_H:%M')"
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-printf "[%s] Installing Helix editor... \n" "$(date +'%D%_H:%M')"
-sudo snap install helix --classic
-
-printf "[%s] Installing Zellij... \n" "$(date +'%D%_H:%M')"
-sudo snap install zellij --classic
-
-printf "[%s] Installing Rustup... \n" "$(date +'%D%_H:%M')"
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-printf "[%s] Build Alacritty... \n" "$(date +'%D%_H:%M')"
-git clone https://github.com/alacritty/alacritty.git
-cd alacritty
-sudo apt install -y cmake \
+    printf "[%s] Build Alacritty... \n" "$(date +'%D%_H:%M')"
+    git clone https://github.com/alacritty/alacritty.git
+    cd alacritty
+    sudo apt install -y cmake \
 	g++ \
 	pkg-config \
 	libfreetype6-dev \
@@ -89,70 +75,39 @@ sudo apt install -y cmake \
 	libxkbcommon-dev \
 	python3
 
-# build
-cargo build --release
+    # build
+    cargo build --release
 
-# desktop entry
-sudo cp target/release/alacritty /usr/local/bin # or anywhere else in $PATH
-sudo cp extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
-sudo desktop-file-install extra/linux/Alacritty.desktop
-sudo update-desktop-database
+    # desktop entry
+    sudo cp target/release/alacritty /usr/local/bin # or anywhere else in $PATH
+    sudo cp extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
+    sudo desktop-file-install extra/linux/Alacritty.desktop
+    sudo update-desktop-database
 
-# https://github.com/alacritty/alacritty/blob/master/INSTALL.md
+    # https://github.com/alacritty/alacritty/blob/master/INSTALL.md
+}
 
+copy_conf() {
+    mkdir -p "$HOME"/.config
 
+    git clone https://github.com/Dav-11/fast-start-config.git
+    cd fast-start-config
+    git submodule init
+    cp -r .config/* "$CONFIG_PATH"/
+    cd ..
+    rm -rf fast-start-config
+}
 
-# copy config_file
-mkdir -p "$HOME"/.config/alacritty
-curl -fsSL https://raw.githubusercontent.com/Dav-11/fast-start-config/main/config_files/alacritty.toml -o "$HOME"/.config/alacritty/alacritty.toml
+##############################################################
+# MAIN
+##############################################################
 
+update_os
+remove_bloat_ubuntu
+install_basic_utils
+copy_conf
 
-printf "[%s]\n ###############################\n\n Installing BASE_PROGRAMMING Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
+build_alacritty
 
-printf "[%s] Installing Go... \n" "$(date +'%D%_H:%M')"
-sudo apt -y install golang-go
-
-printf "[%s] Installing VSCode... \n" "$(date +'%D%_H:%M')"
-wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
-sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-rm -f packages.microsoft.gpg
-
-sudo apt -y install apt-transport-https
-sudo apt -y update
-sudo apt -y install code
-
-
-if [ "$NETWORK" -gt "0" ]
-then
-	printf "[%s]\n ###############################\n\n Installing NEWTORK Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
-	
-	printf "[%s] Installing Easyssh... \n" "$(date +'%D%_H:%M')"
-	flatpak install flathub com.github.muriloventuroso.easyssh
-
-fi
-
-if [ "$CHROME" -gt "0" ]
-then
-	printf "[%s]\n ###############################\n\n Installing CHROME Apps... \n\n ###############################\n" "$(date +'%D%_H:%M')"
-	
-	printf "[%s] Installing Chrome... \n" "$(date +'%D%_H:%M')"
-	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-	sudo apt -y install ./google-chrome-stable_current_amd64.deb
-fi
-
-if [ "$DOCKER" -gt "0" ]
-then
-    printf "[%s]\n ###############################\n\n Installing DOCKER... \n\n ###############################\n" "$(date +'%D%_H:%M')"
-
-	curl -fsSL https://get.docker.com -o get-docker.sh
- 	sudo sh get-docker.sh
-	rm -f get-docker.sh
-fi
-
-if [ "$WALLPAPER" -gt "0" ]
-then
-    curl -s https://raw.githubusercontent.com/Dav-11/fast-start-config/main/extra/wallpaper-downloader.sh | bash -f '/usr/share/backgrounds/'
-fi
 
 printf "[%s] Done, Have a nice day! \n" "$(date +'%D%_H:%M')"
